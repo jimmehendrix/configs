@@ -1,1 +1,0 @@
-"\"/home/jimme/projects/config-cli/src/configs/vue/.eslintrc.js\""
