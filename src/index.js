@@ -6,16 +6,9 @@ const { readdir, writeFile, readFile } = require('fs').promises;
 
 const configFolderPath = path.resolve(__dirname, 'configs');
 
-const configFiles = {};
 
 (async () => {
     const files = await readdir(configFolderPath).catch(console.log);
-
-    for (let i of files) {
-        const fileName = i.split('.')[1];
-        configFiles[fileName] = path.join(configFolderPath, i)
-    }   
-
 
     const { stack } = await inquirer.prompt([
         {
