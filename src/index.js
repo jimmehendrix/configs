@@ -40,12 +40,15 @@ const configFolderPath = path.resolve(__dirname, 'configs');
                     path: configFolderPath + '/' + fw + '/' + file
                 }
             )
+
         })
     }
+    console.log(configs);
 
     configs.forEach(async config => {
         const content = await readFile(config.path).catch(console.log);
-        writeFile(config.filename, JSON.stringify(content.toString(), null, 2));
+        console.log(JSON.stringify(content.toString(), null, 2));
+        // writeFile(config.filename, JSON.stringify(content.toString(), null, 2));
     })
 
 })();
