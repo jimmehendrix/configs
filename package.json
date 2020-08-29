@@ -1,6 +1,6 @@
 {
-  "name": "@jimme/jimme",
-  "version": "0.1.1",
+  "name": "@jimme/config",
+  "version": "0.1.0",
   "description": "CLI tool for configs",
   "main": "src/index.js",
   "dependencies": {
@@ -13,12 +13,12 @@
   "bin": "src/index.js",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/jimmehendrix/jimme.git"
+    "url": "git+https://github.com/jimmehendrix/configs.git"
   },
   "author": "jimme",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/jimmehendrix/jimme/issues"
+    "url": "https://github.com/jimmehendrix/configs/issues"
   },
-  "homepage": "https://github.com/jimmehendrix/jimme#readme"
+  "homepage": "https://github.com/jimmehendrix/configs#readme"
 }
