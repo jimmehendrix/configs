@@ -1,12 +1,23 @@
 {
-  "name": "jimme",
+  "name": "@jimme/jimme",
   "version": "0.1.0",
-  "main": "index.js",
-  "license": "MIT",
-  "scripts": {
-    "start": "node ./src/index.js"
-  },
-  "devDependencies": {
+  "description": "CLI tool for configs",
+  "main": "src/index.js",
+  "dependencies": {
     "inquirer": "^7.3.3"
-  }
+  },
+  "devDependencies": {},
+  "scripts": {
+    "start": "node src/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jimmehendrix/jimme.git"
+  },
+  "author": "jimme",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jimmehendrix/jimme/issues"
+  },
+  "homepage": "https://github.com/jimmehendrix/jimme#readme"
 }
