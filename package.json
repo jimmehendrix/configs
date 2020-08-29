@@ -1,5 +1,5 @@
 {
-  "name": "@jimme/jimme",
+  "name": "jimme",
   "version": "0.1.0",
   "description": "CLI tool for configs",
   "main": "src/index.js",
