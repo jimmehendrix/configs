@@ -42,6 +42,26 @@ const configFolderPath = path.resolve(__dirname, 'configs');
             )
 
         })
+    } else if (stack === 'Back-end') {
+        const { framework } = await inquirer.prompt([
+            {
+                type: 'list',
+                message: 'what are you using?',
+                name: 'framework',
+                choices: ['typescript-node']
+            }
+        ])
+
+        const fw = framework.toLowerCase();
+        const files = await readdir(configFolderPath + '/' + fw);
+        files.forEach(file => {
+            configs.push(
+                {
+                    filename: file,
+                    path: configFolderPath + '/' + fw + '/' + file
+                }
+            )
+        })
     }
 
     configs.forEach(async config => {
