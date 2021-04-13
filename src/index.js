@@ -6,7 +6,6 @@ const { readdir, writeFile, readFile } = require('fs').promises;
 
 const configFolderPath = path.resolve(__dirname, 'configs');
 
-
 (async () => {
     const files = await readdir(configFolderPath).catch(console.log);
 
@@ -15,8 +14,8 @@ const configFolderPath = path.resolve(__dirname, 'configs');
             type: 'list',
             message: 'Are you working on front-end or back-end?',
             name: 'stack',
-            choices: ['Front-end', 'Back-end']
-        }
+            choices: ['Front-end', 'Back-end'],
+        },
     ]);
 
     let configs = [];
@@ -24,49 +23,42 @@ const configFolderPath = path.resolve(__dirname, 'configs');
         const { framework } = await inquirer.prompt([
             {
                 type: 'list',
-                message: "What framework are you using?",
+                message: 'What framework are you using?',
                 name: 'framework',
-                choices: ['Vue', 'none']
-            }
-        ])
-        
+                choices: ['Vue', 'Vue3-typescript', 'none'],
+            },
+        ]);
+
         const fw = framework.toLowerCase();
         const files = await readdir(configFolderPath + '/' + fw);
-        files.forEach(file => {
-
-            configs.push(
-                {
-                    filename: file,
-                    path: configFolderPath + '/' + fw + '/' + file
-                }
-            )
-
-        })
+        files.forEach((file) => {
+            configs.push({
+                filename: file,
+                path: configFolderPath + '/' + fw + '/' + file,
+            });
+        });
     } else if (stack === 'Back-end') {
         const { framework } = await inquirer.prompt([
             {
                 type: 'list',
                 message: 'what are you using?',
                 name: 'framework',
-                choices: ['typescript-node']
-            }
-        ])
+                choices: ['typescript-node'],
+            },
+        ]);
 
         const fw = framework.toLowerCase();
         const files = await readdir(configFolderPath + '/' + fw);
-        files.forEach(file => {
-            configs.push(
-                {
-                    filename: file,
-                    path: configFolderPath + '/' + fw + '/' + file
-                }
-            )
-        })
+        files.forEach((file) => {
+            configs.push({
+                filename: file,
+                path: configFolderPath + '/' + fw + '/' + file,
+            });
+        });
     }
 
-    configs.forEach(async config => {
+    configs.forEach(async (config) => {
         const content = await readFile(config.path).catch(console.log);
         writeFile(config.filename, content, null, 2);
-    })
-
+    });
 })();
