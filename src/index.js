@@ -3,62 +3,103 @@
 const inquirer = require('inquirer');
 const path = require('path');
 const { readdir, writeFile, readFile } = require('fs').promises;
+const { exec } = require('child_process');
 
 const configFolderPath = path.resolve(__dirname, 'configs');
 
 (async () => {
-    const files = await readdir(configFolderPath).catch(console.log);
+  const globals = await readdir(`${configFolderPath}/global`).catch(
+    console.log,
+  );
 
-    const { stack } = await inquirer.prompt([
-        {
-            type: 'list',
-            message: 'Are you working on front-end or back-end?',
-            name: 'stack',
-            choices: ['Front-end', 'Back-end'],
-        },
+  const output = [];
+
+  const outputItem = (name, path) => {
+    return {
+      name,
+      path: `${configFolderPath}/${path}`,
+    };
+  };
+
+  // Global config files
+  const { files } = await inquirer.prompt([
+    {
+      type: 'checkbox',
+      message: 'Select config files',
+      name: 'files',
+      choices: globals,
+    },
+  ]);
+
+  files.forEach((file) => output.push(outputItem(file, 'global/' + file)));
+
+  const frameworkChoices = await readdir(
+    `${configFolderPath}/frameworks`,
+  ).catch(console.log);
+
+  // Framework specific files
+  const { framework } = await inquirer.prompt([
+    {
+      type: 'list',
+      message: 'What framework are you doing?',
+      name: 'framework',
+      choices: [...frameworkChoices, 'none'],
+    },
+  ]);
+
+  if (framework !== 'none') {
+    const frameworkFilesList = await readdir(
+      `${configFolderPath}/frameworks/${framework}`,
+    );
+
+    const { frameworkFiles } = await inquirer.prompt([
+      {
+        type: 'checkbox',
+        message: `Select ${framework} config files`,
+        name: 'frameworkFiles',
+        choices: frameworkFilesList,
+      },
     ]);
 
-    let configs = [];
-    if (stack === 'Front-end') {
-        const { framework } = await inquirer.prompt([
-            {
-                type: 'list',
-                message: 'What framework are you using?',
-                name: 'framework',
-                choices: ['Vue', 'Vue3-typescript', 'none'],
-            },
-        ]);
+    frameworkFiles.forEach((file) =>
+      output.push(outputItem(file, `frameworks/${framework}/${file}`)),
+    );
+  }
 
-        const fw = framework.toLowerCase();
-        const files = await readdir(configFolderPath + '/' + fw);
-        files.forEach((file) => {
-            configs.push({
-                filename: file,
-                path: configFolderPath + '/' + fw + '/' + file,
-            });
-        });
-    } else if (stack === 'Back-end') {
-        const { framework } = await inquirer.prompt([
-            {
-                type: 'list',
-                message: 'what are you using?',
-                name: 'framework',
-                choices: ['typescript-node'],
-            },
-        ]);
+  // Write files to root
+  output.forEach(async (config) => {
+    const content = await readFile(config.path).catch(console.error);
+    writeFile(config.name, content, null, 2).catch(console.error);
+  });
 
-        const fw = framework.toLowerCase();
-        const files = await readdir(configFolderPath + '/' + fw);
-        files.forEach((file) => {
-            configs.push({
-                filename: file,
-                path: configFolderPath + '/' + fw + '/' + file,
-            });
-        });
+  const { runEslintInstall } = await inquirer.prompt([
+    {
+      type: 'confirm',
+      name: 'runEslintInstall',
+      message: 'Do you want to install the eslint-config-jimme?',
+      default: true,
+    },
+  ]);
+
+  if (runEslintInstall) {
+    const { packageManager } = await inquirer.prompt([
+      {
+        type: 'list',
+        name: 'packageManager',
+        message: 'What package manager do you use?',
+        choices: ['yarn', 'npm'],
+      },
+    ]);
+
+    let command = `yarn add -D eslint-config-jimme`;
+    if (packageManager === 'npm') {
+      command = `npm install --save-dev eslint-config-jimme`;
     }
 
-    configs.forEach(async (config) => {
-        const content = await readFile(config.path).catch(console.log);
-        writeFile(config.filename, content, null, 2);
+    exec(command, (error, stdout, stderr) => {
+      if (error) console.error(error);
+      if (stderr) console.error(stderr);
+      console.log(stdout);
     });
+  }
 })();
